@@ -1,6 +1,7 @@
 package comstage.stage.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -26,13 +27,12 @@ public class Employee{
 
     @Column(name = "first_name")
     private String firstName;
-    @Column(name = "last_name")
-    private String lastName;
+
     @Column(name = "email")
     private String email;
     @Column(name = "phone_number")
     private String phoneNumber;
-
+    @JsonIgnore
     @Column(name = "password")
     private String password;
     @Column(name = "username")

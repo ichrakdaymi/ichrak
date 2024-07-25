@@ -21,7 +21,7 @@ public class AdminService {
     public Admin toAdmin(SignupAdminRequest request) {
         Admin admin4signup = new Admin();
         admin4signup.setFirstName(request.getFirstName());
-        admin4signup.setLastName(request.getLastName());
+        
         admin4signup.setEmail(request.getEmail());
         admin4signup.setPhoneNumber(request.getPhoneNumber());
         admin4signup.setPassword(request.getPassword());

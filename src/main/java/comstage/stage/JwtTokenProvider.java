@@ -1,13 +1,12 @@
 package comstage.stage;
 
-
+import comstage.stage.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class JwtTokenProvider {
@@ -25,14 +25,12 @@ public class JwtTokenProvider {
 
     @Autowired
     private UserDetailsService userDetailsService;
-//    @Autowired
-//    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
-//        this.secretKey = secretKey;
-//        System.out.println("Secret Key: " + this.secretKey);
-//    }
+    @Autowired
+    private UserService userService;
 
-    public String createToken(String username, List<String> roles  ) {      //  TODO   add , Long userId
+    public String createToken(String username, Long userId, List<String> roles) {
         Claims claims = Jwts.claims().setSubject(username);
+        claims.put("userId", userId); // Ajoute l'ID utilisateur au jeton
         claims.put("roles", roles);
 
         Date now = new Date();
@@ -45,16 +43,28 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
+    public Long getUserIdFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.get("userId", Long.class); // Ensure userId is included in token claims
+    }
+
 
     public String getUsername(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
+
 
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(getUsername(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
-
 
     public boolean validateToken(String token) {
         try {
@@ -72,14 +82,9 @@ public class JwtTokenProvider {
         }
         return null;
     }
-    //
-    public String extractRole(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token)
-                .getBody();
-        // Retourne le rôle extrait du token. Assurez-vous que le rôle est stocké sous le nom "role".
-        return claims.get("role", String.class);
-    }
 
+    private Long getUserIdFromUsername(String username) {
+        Optional<Long> optionalUserId = userService.findUserIdByUsername(username);
+        return optionalUserId.orElseThrow(() -> new RuntimeException("User not found"));
+    }
 }
