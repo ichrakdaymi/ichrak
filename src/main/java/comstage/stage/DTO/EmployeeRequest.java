@@ -11,7 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class EmployeeRequest {
 
-    private String firstName;
     private String email;
 
     private String phoneNumber;

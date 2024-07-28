@@ -25,8 +25,6 @@ public class Employee{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "first_name")
-    private String firstName;
 
     @Column(name = "email")
     private String email;

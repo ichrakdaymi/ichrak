@@ -2,9 +2,12 @@ package comstage.stage.service;
 
 import comstage.stage.entity.Admin;
 import comstage.stage.entity.Employee;
+import comstage.stage.entity.Role;
 import comstage.stage.repository.AdminRepository;
 import comstage.stage.repository.EmployeeRepository;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -18,6 +21,7 @@ public class UserService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
 
     public Optional<Long> findUserIdByUsername(String username) {
         // Try to find the user as Admin
@@ -35,4 +39,5 @@ public class UserService {
         // Return an empty Optional if the user is not found
         return Optional.empty();
     }
+
 }

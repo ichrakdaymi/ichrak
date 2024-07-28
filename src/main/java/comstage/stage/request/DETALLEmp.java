@@ -16,11 +16,10 @@ import java.util.List;
 
 public class DETALLEmp {
     //private Long id;
-    private String firstName;
 
     private String email;
     private String phoneNumber;
     private String username;
-    private Role role;
+    private Role role;                 // to verify
     private List<Task> tasks;
 }

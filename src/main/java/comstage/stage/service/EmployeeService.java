@@ -39,7 +39,6 @@ public class EmployeeService {
             Employee emp = new Employee();
             emp.setUsername(employee.getUsername());
             emp.setPassword(employee.getPassword());
-            emp.setFirstName(employee.getFirstName());
             emp.setEmail(employee.getEmail());
             emp.setPhoneNumber(employee.getPhoneNumber());
         employeeRepository.save(emp);
@@ -50,7 +49,6 @@ public class EmployeeService {
     public DETALLEmp convertToDTO(Employee employee) {
         DETALLEmp dto = new DETALLEmp();
       // dto.setId(employee.getId());
-        dto.setFirstName(employee.getFirstName());
         dto.setEmail(employee.getEmail());
         dto.setPhoneNumber(employee.getPhoneNumber());
         dto.setUsername(employee.getUsername());

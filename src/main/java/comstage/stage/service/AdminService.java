@@ -5,6 +5,7 @@ import comstage.stage.entity.Admin;
 import comstage.stage.entity.Role;
 import comstage.stage.repository.AdminRepository;
 import comstage.stage.request.SignupAdminRequest;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,7 @@ public class AdminService {
     // private Admin admin4signup;
     public Admin toAdmin(SignupAdminRequest request) {
         Admin admin4signup = new Admin();
-        admin4signup.setFirstName(request.getFirstName());
-        
+
         admin4signup.setEmail(request.getEmail());
         admin4signup.setPhoneNumber(request.getPhoneNumber());
         admin4signup.setPassword(request.getPassword());
@@ -42,6 +42,22 @@ public class AdminService {
         if (findByUsername(adminUsername).isPresent()){
             throw new IllegalArgumentException("Compte existant ");
         }return  adminRepository.save(admin);
+    }
+    @PostConstruct
+    public void createDefaultAdmin() {
+        Admin userADM =new Admin();
+
+        String username = "ADMIN";
+        if (!adminRepository.existsByUsername(username)) {
+            userADM.setEmail("adm@mail.com");
+            userADM.setUsername("ADMIN");
+            userADM.setPhoneNumber("1234667");
+            userADM.setPassword(passwordEncoder.encode("adm"));
+            userADM.setRole(Role.ADMIN);
+            adminRepository.save(userADM);
+        }
+
+
     }
 
 }

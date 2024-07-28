@@ -12,10 +12,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,31 +28,13 @@ public class AuthController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
-    @Autowired
-    private AdminService adminService;
+
     @Autowired
     private UserService userService; // Inject UserService
 
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
-    @PostMapping("/sign-up/admin")
-    public ResponseEntity<?> registerAdmin(@RequestBody SignupAdminRequest admin) {
-        try {
-            adminService.saveAdmin(admin);
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "Admin registered successfully");
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
-        } catch (Exception e) {
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
-    }
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> authenticateUser(@RequestBody AuthRequest authRequest) {
@@ -88,4 +72,5 @@ public class AuthController {
         Optional<Long> optionalUserId = userService.findUserIdByUsername(username);
         return optionalUserId.orElseThrow(() -> new RuntimeException("User not found"));
     }
+
 }

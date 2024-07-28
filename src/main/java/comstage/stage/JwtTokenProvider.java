@@ -30,7 +30,7 @@ public class JwtTokenProvider {
 
     public String createToken(String username, Long userId, List<String> roles) {
         Claims claims = Jwts.claims().setSubject(username);
-        claims.put("userId", userId); // Ajoute l'ID utilisateur au jeton
+        claims.put("userId", userId);
         claims.put("roles", roles);
 
         Date now = new Date();
